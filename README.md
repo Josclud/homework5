@@ -8,3 +8,4 @@
 * Appointments are entered to a specific hour inline, and the 'save' button saves them to local storage
 * This application uses jquery
 
+* use moment.js
