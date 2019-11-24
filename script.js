@@ -22,31 +22,23 @@ let workDay = {
 // $("#date-today").text = moment().format('dddd');
 
 $(document).ready(function(){
-  initializeLocalStorage();
-  console.log
+  if(!localStorage.getItem('workDay')) {
+    updateCalendarTasks(workDay);
+  } else {
+    updateCalendarTasks(JSON.parse(localStorage.getItem('workDay')));
+  }
 })
-
 
 $('#date-today h6').text(moment().format('dddd') + ", " + moment().format('MMMM Do YYYY, h:mm:ss a'));
 
-// sets up the page with hours
-// and loads the contents of the workday object or the object in local storage
 let counter = 1;
 for(const property in workDay) {
-  // let dataToLoad = workDay;
-  // if(localStorage.getItem('workDay')) {
-  //   dataToLoad = JSON.parse(localStorage.getItem('workDay'));
-  // }
-  workDay1 = loadCorrectDataset();
-
-
   let textEntry = "#text-entry" + counter;
-  $(textEntry).text(workDay1[property]);
+  $(textEntry).text(workDay[property]);
   let timeId = "#time" + counter;
-  let presentHour = moment().hour();  // TEMPORARILY SUBTRACTING FOR TESTING PURPOSES
+  let presentHour = moment().hour();
   let timeString = $(timeId).text();
   let timeNumber = hourNumberFromHourString(timeString);  
-  // $(timeId).attr("value", timeString);
   if(timeNumber < presentHour) {
     $(textEntry).addClass("past-hour");
   } else if (timeNumber > presentHour) {
@@ -56,10 +48,6 @@ for(const property in workDay) {
   }
   counter ++;
 }
-
-// $(".calendar-row").each(() => {
-//   console.log('XXX', $('.time').text());
-// });
 
 $("button").click(function() {
   value = $(this).siblings("textarea").val();
@@ -85,7 +73,6 @@ function hourNumberFromHourString(hourString) {
 
 function loadCorrectDataset() {
   result = localStorage.getItem('workDay')
-  console.log('LOADCORRECTDATSSET', result);
   return (result ? result : workDay);
 }
 
@@ -105,35 +92,12 @@ function saveSchedule(hourString, val) {
   let workHours = JSON.parse(localStorage.getItem('workDay'));
   workHours[hourString] = val
   
-  console.log('WITH NEW STRING', workHours);
   saveToLocalStorage(workHours);
-  console.log('UPDATED', JSON.parse(localStorage.getItem('workDay')));
 }
 
-// update calendar with contents of localStorage
-function updateCalendarContents(dayObject) {
-  let workHours = JSON.parse(localStorage.getItem('workDay'));
-  let hourString = $("#time" + counter).text();
-  console.log('HOURSTRING', hourString);
-  for(const property in workHours) {
-    // set the contents of the textarea to be dayObject[property]
-    console.log("PROPERTY", property);
-    console.log("TEST WORKHOURS", dayObject[property]);
-
-    let res = $("div").attr("value", property);
-    console.log('BLOOPER', res);
-  }
-}
-
-function newUpdateCalendar(dayObject) {
+function updateCalendarTasks(dayObject) {
   $(".calendar-row").each(function(index) {
-    // iterate over the calendar
     let res = $(this).children("div");
-    console.log("RES", res);
-    console.log("RES.TEXT()", res.text());
-    console.log("DAYOBJECT VALUE", dayObject[res.text()]);
     $(this).children("textarea").text(dayObject[res.text()]);
   })
 }
-
-newUpdateCalendar(JSON.parse(localStorage.getItem('workDay')));  //DELETEME
