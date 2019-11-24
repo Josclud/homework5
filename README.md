@@ -1,6 +1,6 @@
 ## Day Planner
 
-![calendar application screenshot](./screenshots/pw_gen.png "Calendar Application Screen Shot")
+![calendar application screenshot](./screenshots/workday.png "Calendar Application Screen Shot")
 
 # How it Works
 * Make a calendar to represent the workday: 9AM-5PM.
