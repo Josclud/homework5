@@ -1,8 +1,3 @@
-// put today's date in the calendar
-// get the stuff (if any) out of local storage to populate the calendar
-// if the workDay object is not already in local storage, put it there
-// rows are textareas
-
 let workDay = {
   "8 AM": "",
   "9 AM": "",
@@ -15,11 +10,6 @@ let workDay = {
   "4 PM": "",
   "5 PM": "",
 };
-
-// get the item using jquery
-//fridgeMagnet.text($(this).attr("data-letter"))
-
-// $("#date-today").text = moment().format('dddd');
 
 $(document).ready(function(){
   if(!localStorage.getItem('workDay')) {
@@ -91,7 +81,7 @@ function saveSchedule(hourString, val) {
 
   let workHours = JSON.parse(localStorage.getItem('workDay'));
   workHours[hourString] = val
-  
+
   saveToLocalStorage(workHours);
 }
 
