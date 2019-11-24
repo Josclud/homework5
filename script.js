@@ -26,7 +26,7 @@ for(const property in workDay) {
   let textEntry = "#text-entry" + counter;
   $(textEntry).text(workDay[property]);
   let timeId = "#time" + counter;
-  let presentHour = moment().hour();
+  let presentHour = moment().hour() - 6;
   let timeString = $(timeId).text();
   let timeNumber = hourNumberFromHourString(timeString);  
   if(timeNumber < presentHour) {
