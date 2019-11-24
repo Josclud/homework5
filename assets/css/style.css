@@ -13,8 +13,8 @@ textarea {
 }
 
 .future-hour {
-  background-color: green;
-  bordere-color: green;
+  background-color: rgb(90, 177, 90);
+  bordere-color: rgb(41, 136, 41);
 }
 
 button {
@@ -25,4 +25,8 @@ button {
 header {
   border-bottom-width: 10px;
   text-color: red;
+}
+
+button {
+  font-size: 2em;
 }

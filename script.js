@@ -4,58 +4,68 @@
 // rows are textareas
 
 let workDay = {
-  "8 AM": "test0",
-  "9 AM": "test1",
-  "10 AM": "test2",
-  "11 AM": "test3",
-  "12 PM": "test4",
-  "1 PM": "test5",
-  "2 PM": "test6",
-  "3 PM": "test7",
-  "4 PM": "test8",
-  "5 PM": "test9",
+  "8 AM": "",
+  "9 AM": "",
+  "10 AM": "",
+  "11 AM": "",
+  "12 PM": "",
+  "1 PM": "",
+  "2 PM": "",
+  "3 PM": "",
+  "4 PM": "",
+  "5 PM": "",
 };
 
 // get the item using jquery
 //fridgeMagnet.text($(this).attr("data-letter"))
+
 // $("#date-today").text = moment().format('dddd');
 
-// $(document).ready(function(){
-//   for(const property in workDay) {
-//     console.log(property + ": " + workDay[property]);
-//     $()
-//   }
-// })
+$(document).ready(function(){
+  initializeLocalStorage();
+  console.log
+})
 
 
 $('#date-today h6').text(moment().format('dddd') + ", " + moment().format('MMMM Do YYYY, h:mm:ss a'));
 
-// loads the contents of the object into the page
+// sets up the page with hours
+// and loads the contents of the workday object or the object in local storage
 let counter = 1;
 for(const property in workDay) {
-  let textEntry = "#text-entry" + counter
-  $(textEntry).text(workDay[property]);
+  // let dataToLoad = workDay;
+  // if(localStorage.getItem('workDay')) {
+  //   dataToLoad = JSON.parse(localStorage.getItem('workDay'));
+  // }
+  workDay1 = loadCorrectDataset();
+
+
+  let textEntry = "#text-entry" + counter;
+  $(textEntry).text(workDay1[property]);
   let timeId = "#time" + counter;
-  let presentHour = moment().hour() - 6;  // TEMPORARILY SUBTRACTING FOR TESTING PURPOSES
-  let timeNumber = hourNumberFromHourString($(timeId).text());
+  let presentHour = moment().hour();  // TEMPORARILY SUBTRACTING FOR TESTING PURPOSES
+  let timeString = $(timeId).text();
+  let timeNumber = hourNumberFromHourString(timeString);  
+  // $(timeId).attr("value", timeString);
   if(timeNumber < presentHour) {
-    console.log('if statement')
-    // set the style to past-hour
     $(textEntry).addClass("past-hour");
   } else if (timeNumber > presentHour) {
-    // set style to future-hour
     $(textEntry).addClass("future-hour");
   } else {
-    // set style to present-hour
     $(textEntry).addClass("present-hour");
   }
   counter ++;
 }
 
-$(".calendar-row").each(() => {
-  console.log('XXX', $('.time').text());
+// $(".calendar-row").each(() => {
+//   console.log('XXX', $('.time').text());
+// });
+
+$("button").click(function() {
+  value = $(this).siblings("textarea").val();
+  hourString = $(this).siblings("div").text();
   
-  // $(".calendar-row").text("HELLO");
+  saveSchedule(hourString, value);
 });
 
 function hourNumberFromHourString(hourString) {
@@ -73,33 +83,57 @@ function hourNumberFromHourString(hourString) {
   }
 }
 
-// still TBD
-//onclick handler for each of the rows: to write the text into the workDay object
-//event.preventDefault();
-// if there isn't an object in local storage, create one
-// then
-// get the workDay object from local storage
-// set the row value
-// put it back in local storage
+function loadCorrectDataset() {
+  result = localStorage.getItem('workDay')
+  console.log('LOADCORRECTDATSSET', result);
+  return (result ? result : workDay);
+}
 
-
-// still TBD
-// get the workDay object from local storage
-// save it to local storage - when? on save, I guess
 function initializeLocalStorage() {
   localStorage.setItem('workDay', JSON.stringify(workDay));
 };
 
-function saveSchedule(row) {
-  if(!localStorage.getItem('workDay')) {
-    intitalizeLocalStorage();
-  }
-  let workHours = JSON.parse(localStorage.getItem('workDay'));
-  //workHours - figure out how to use "this"
-  
-  //else {
-  //   let scores = JSON.parse(localStorage.getItem("scoreArray"));
-  //   scores.push(userScore);
-  //   localStorage.setItem('scoreArray', JSON.stringify(scores));
-  // }
+function saveToLocalStorage(dayObj) {
+  localStorage.setItem('workDay', JSON.stringify(dayObj));
 }
+
+function saveSchedule(hourString, val) {
+  if(!localStorage.getItem('workDay')) {
+    initializeLocalStorage();
+  }
+
+  let workHours = JSON.parse(localStorage.getItem('workDay'));
+  workHours[hourString] = val
+  
+  console.log('WITH NEW STRING', workHours);
+  saveToLocalStorage(workHours);
+  console.log('UPDATED', JSON.parse(localStorage.getItem('workDay')));
+}
+
+// update calendar with contents of localStorage
+function updateCalendarContents(dayObject) {
+  let workHours = JSON.parse(localStorage.getItem('workDay'));
+  let hourString = $("#time" + counter).text();
+  console.log('HOURSTRING', hourString);
+  for(const property in workHours) {
+    // set the contents of the textarea to be dayObject[property]
+    console.log("PROPERTY", property);
+    console.log("TEST WORKHOURS", dayObject[property]);
+
+    let res = $("div").attr("value", property);
+    console.log('BLOOPER', res);
+  }
+}
+
+function newUpdateCalendar(dayObject) {
+  $(".calendar-row").each(function(index) {
+    // iterate over the calendar
+    let res = $(this).children("div");
+    console.log("RES", res);
+    console.log("RES.TEXT()", res.text());
+    console.log("DAYOBJECT VALUE", dayObject[res.text()]);
+    $(this).children("textarea").text(dayObject[res.text()]);
+  })
+}
+
+newUpdateCalendar(JSON.parse(localStorage.getItem('workDay')));  //DELETEME
